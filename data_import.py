@@ -33,7 +33,8 @@ def create_body():
         file.readline() #pomija pierwszy wiersz
         for line in file:
             elememts= line.strip().split(';')
-
+            if not line.strip(): #zatrzymuje jak jest pusto
+                break
             body.append(elememts)
 
 

@@ -1,6 +1,6 @@
 from data_import import create_body, create_connection
 
 
-show = create_body()
+body = create_body()
 
-show2 = create_connection()
+connect = create_connection()
