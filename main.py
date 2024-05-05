@@ -1,19 +1,36 @@
 import numpy as np
 
-def oblicz_transformacje(punkt_referencyjny, kat):
-    # Obliczenie macierzy obrotu dla danego kąta
-    macierz_obrotu = np.array([[np.cos(kat), -np.sin(kat)],
-                               [np.sin(kat), np.cos(kat)]])
-    # Przesunięcie do punktu referencyjnego
-    przesuniecie = np.array(punkt_referencyjny)
-    return macierz_obrotu, przesuniecie
+import csv
 
-# Przykład użycia funkcji
-punkt_referencyjny = (0, 0)
-kat = np.pi/4  # Przykładowy kąt (45 stopni)
-transformacja = oblicz_transformacje(punkt_referencyjny, kat)
-macierz_obrotu, przesuniecie = transformacja
-print("Macierz obrotu:")
-print(macierz_obrotu)
-print("Przesunięcie:")
-print(przesuniecie)
+
+def importBody(fileBody):
+    body = []
+    with open(fileBody, 'r') as csvfile:
+        csvreader = csv.reader(csvfile, delimiter=';')
+        next(csvreader)  # Pominięcie nagłówków
+        for row in csvreader:
+            if row[1] == 'linia':
+                czlon = {
+                    'numer': int(row[0]),
+                    'typ': row[1],
+                    'punkty': [(row[i], float(row[i+1]), float(row[i+2])) for i in range(2, len(row), 3)]
+                }
+                dane_czlonow.append(czlon)
+            elif row[1] == 'wielobok':
+                czlon = {
+                    'numer': int(row[0]),
+                    'typ': row[1],
+                    'punkty': [(row[i], float(row[i+1]), float(row[i+2])) for i in range(2, len(row)-3, 3)],
+                    'srodek_ciezkosci': (row[-3], float(row[-2]), float(row[-1]))
+                }
+                dane_czlonow.append(czlon)
+            else:
+                print("Nieznany typ czlonu:", row[1])
+            
+    return dane_czlonow, dane_par
+
+
+fileBody = 'czlon_input.csv'
+fileConnect = "para_input.csv"
+
+body = importBody(fileBody)
