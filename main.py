@@ -1,36 +1,20 @@
 import numpy as np
+import os
 
-import csv
+files_path_body = os.path.join("input_file", "czlon_input.txt")
+file_body = open(files_path_body, 'r')
 
+files_path_connector = os.path.join("input_file", "para_input.txt")
+file_connect = open(files_path_connector, 'r')
 
-def importBody(fileBody):
-    body = []
-    with open(fileBody, 'r') as csvfile:
-        csvreader = csv.reader(csvfile, delimiter=';')
-        next(csvreader)  # Pominięcie nagłówków
-        for row in csvreader:
-            if row[1] == 'linia':
-                czlon = {
-                    'numer': int(row[0]),
-                    'typ': row[1],
-                    'punkty': [(row[i], float(row[i+1]), float(row[i+2])) for i in range(2, len(row), 3)]
-                }
-                dane_czlonow.append(czlon)
-            elif row[1] == 'wielobok':
-                czlon = {
-                    'numer': int(row[0]),
-                    'typ': row[1],
-                    'punkty': [(row[i], float(row[i+1]), float(row[i+2])) for i in range(2, len(row)-3, 3)],
-                    'srodek_ciezkosci': (row[-3], float(row[-2]), float(row[-1]))
-                }
-                dane_czlonow.append(czlon)
-            else:
-                print("Nieznany typ czlonu:", row[1])
-            
-    return dane_czlonow, dane_par
+l=1
+for line in file_body:
+    print(f"linia {l}: {line}", end='')
+    l +=1
+file_body.close()
 
-
-fileBody = 'czlon_input.csv'
-fileConnect = "para_input.csv"
-
-body = importBody(fileBody)
+l=1
+for line in file_connect:
+    print(f"linia {l}: {line}", end='')
+    l +=1
+file_connect.close()
