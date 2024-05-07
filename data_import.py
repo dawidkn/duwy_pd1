@@ -15,8 +15,8 @@ def create_body():
             body.append(elememts)
 
 
-    for row in body:
-        print(row)
+    # for row in body:
+    #     print(row)
 
     return body 
 
@@ -33,7 +33,4 @@ def create_connection():
                 break
             connection.append(elememts)
 
-
-    for row in connection:
-        print(row)
     return connection

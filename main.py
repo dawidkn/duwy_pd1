@@ -6,8 +6,5 @@ body = create_body()
 
 connect = create_connection()
 
-print(body[0][8] + "test")
-
-
 draw_figure(body)
 

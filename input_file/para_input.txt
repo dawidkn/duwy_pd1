@@ -1,6 +1,6 @@
 Numer_pary;typ_pary;czlon1;czlon2;wsp_X;wsp_Y
 1;obrotowa;G;1;0;0
-2;obrotowa;1;2;0;1
+2;obrotowa;1;2;0;2
 3;postepowa;G;2;3;2
 
 
