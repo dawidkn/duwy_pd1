@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 
 
 def draw_figure(data): 
-    name = []
     typ = []
     x = []
     y = []
@@ -12,7 +11,7 @@ def draw_figure(data):
 
     for row in data:
          #* jest do tego że popierwszych dwóch zmiennych przypisuje już nastepne dane w wierszu do point
-        getname, getfigure_type, *points = row
+        getfigure_type, *points = row
         point = [float(z) for z in points]
         coordinate_x = []
         coordinate_y = []
@@ -33,26 +32,25 @@ def draw_figure(data):
         cog_x.append(cogxo)
         cog_y.append(cogyo)
         typ.append(getfigure_type)
-        name.append(getname)
 
 
-    for j in range(len(x)):  # Iteracja przez indeksy j (odpowiadające każdej figurze)
+    for j in range(len(x)):  
         print("zew")
         print(j)
-        for i in range(len(x)):  # Iteracja przez indeksy i (odpowiadające listom cog_x i cog_y)
+        for i in range(len(x)):  
             print("wew")
             print(i)
 
             print("nazwa")
             print(typ[i])
-            # Dodaj te wypisy do kodu, aby śledzić rozmiary list i indeksy
             # print(f"i: {i}, j: {j}, len(cog_x): {len(cog_x)}, len(cog_y): {len(cog_y)}")
             # print(f"cog_x[j][i]: {cog_x[i][j]}, cog_y[j][i]: {cog_y[i][j]}")
             
-            plt.plot(x[j], y[j], label=f"czlon {name[j]}")  # Zmiana name[i] na name[j]
-            plt.scatter(cog_x[j], cog_y[j], color='red', label=f"Środek ciężkości {name[j]}")  # Zmiana name[i] na name[j]
+            plt.plot(x[j], y[j], label=f"czlon" + str(j))
+            plt.scatter(cog_x[j], cog_y[j], color='red') 
             figure.append(plt.gca())
             plt.clf()
+
     for polts in figure:
         polts.set_xlabel('X')
         polts.set_ylabel('Y')
