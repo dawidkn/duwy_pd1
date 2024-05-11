@@ -8,9 +8,11 @@ def con_def(connect):
 
     for row in connect:
         if row[0] == "obrotowa":
+            del row[0]
             c_rot.append(row)
 
         elif row[0] == "postepowa":
+            del row[0]
             c_mov.append(row)
         else:
             print("blad danych")

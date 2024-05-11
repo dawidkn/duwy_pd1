@@ -14,4 +14,5 @@ moving_x, moving_y, moving_connect, rotation_connect = connections.moving_line_c
 
 S, Q, Rot = vector_definition.absolute_vector(body, connect, step_time,time)
 
-calculation.node_eq(S, Q, Rot, connect)
+eq = calculation.node_eq(S, Q, Rot, connect)
+
