@@ -1,8 +1,8 @@
 typ_czlonu;punkt1_X;punkt1_Y;punkt2_X;punkt2_Y;punkt3_X;punkt3_Y;punkt3_X;punkt3_Y;punkt4_X;punkt4_Y;punkt5_X;punkt5_Y;cog_X;cog_Y
-WIELOBOK;0;1;2;3;4;5;-0.5;3
-LINIA;1.5;2.5;3.5;4.5;1.5;2
-WIELOBOK;2.3;3.3;4.3;5.3;6.3;7.3;8.3;9.3;1;4
-LINIA;2.1;3.1;4.1;5.1;1.5;5
+LINIA;0;0;0;1;0;0.5
+LINIA;0;1;3;4;2;2.5
+
+
 
 
 

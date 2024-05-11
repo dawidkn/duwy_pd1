@@ -46,7 +46,7 @@ def moving_line_connectors(connect, step_time, time):
     plt.xlabel('time')
     plt.ylabel('[mm]')
     plt.legend()
-    plt.show()
+    # plt.show()
     return x, y, moving_connect, rotation_connect
 
 
