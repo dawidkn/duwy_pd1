@@ -12,27 +12,25 @@ def perpendicular(q1, q2, q3, q4):
 def function(rot, S):
     # Przykładowa funkcja
     om = np.array([[0, -1], [1,0]])
-    f1 = np.dot(rot,S)
-    print(f1)
+    f1 = np.dot(om, np.dot(rot, S)) #macierz
     return np.array(f1)
 
 def jacobian(Q, eq_result, rot, S):
-    print("33")
     m = int(len(Q))
     Fq = np.zeros((m,m))
     h = 1e-5
     
     J = np.zeros((m, m))
-    for i in range(len(Q)):
-        J = function(rot[i], S[i])
+    J = function(rot, S)
 
     return J
         
 
 def newrap(q,j):
-
+    print(q)
+    print(j)
     Nr = q - np.linalg.solve(q, j)
-    print(Nr)
+    # print(Nr)
 
 def node_eq(S, Q, Rot, Connection):
 
@@ -40,6 +38,8 @@ def node_eq(S, Q, Rot, Connection):
     eq_node = []
     index = 0
     s_zero = np.array([[0],[0]])
+    Fqjacob = []
+    New_rap = []
     for row in S:
         rot_matrix = []
         r = []
@@ -59,15 +59,17 @@ def node_eq(S, Q, Rot, Connection):
                 eq_node.append(eq_result)
 
                 eq_node.append(eq_result)
+                Fqj = (jacobian(Q[int(Connection[index][1])-1], eq_result, Roto1, so1))
+                New_rap.append(newrap(Q[int(Connection[index][2])-1], Fqj))
+                Fqjacob.append(Fqj)
 
             else:
                 U, V = perpendicular(0, 0, q1, q2)
                 eq_result = s_zero - (rn + np.dot(Roto, so))*np.dot(Roto, U)
                 eq_node.append(eq_result)
-
-  
-
-        
+                Fqj = (jacobian(Q[int(Connection[index][1])-1], eq_result, Roto1, so1))
+                New_rap.append(newrap(Q[int(Connection[index][2])-1], Fqj))
+                Fqjacob.append(Fqj)
         else:
             q1 = Q[int(Connection[index][1])-1][0]
             q2 = Q[int(Connection[index][1])-1][1]
@@ -88,17 +90,31 @@ def node_eq(S, Q, Rot, Connection):
                 eq_result = (rn2 + np.dot(Roto2, so2)) - (rn1 + np.dot(Roto1, so1))
 
                 eq_node.append(eq_result)
+                Fqj1 = (jacobian(Q[int(Connection[index][1])-1], eq_result, Roto1, so1))
+                Fqj2 = (jacobian(Q[int(Connection[index][2])-1], eq_result, Roto2, so2))
+                New_rap.append(newrap(Q[int(Connection[index][1])-1], Fqj1))
+                New_rap.append(newrap(Q[int(Connection[index][2])-1], Fqj2))
+                Fqjacob.append(Fqj1)
+                Fqjacob.append(Fqj2)
 
             else:
                 U, V = perpendicular(q1, q2, q3, q4)
 
                 eq_result = ((rn2 + np.dot(Roto2, so2)) - (rn1 + np.dot(Roto1, so1)))*np.dot(Roto2, U) - f_time
                 eq_node.append(eq_result)
+                Fqj1 = (jacobian(Q[int(Connection[index][1])-1], eq_result, Roto1, so1))
+                Fqj2 = (jacobian(Q[int(Connection[index][2])-1], eq_result, Roto2, so2))
+                New_rap.append(newrap(Q[int(Connection[index][1])-1], Fqj1))
+                New_rap.append(newrap(Q[int(Connection[index][2])-1], Fqj2))
+                Fqjacob.append(Fqj1)
+                Fqjacob.append(Fqj2)
+
 
         index += 1
-    Fqj = jacobian(Q, eq_result, Rot, S)
-    newrap(Q, Fqj)
-    print(Fqj)
+    print(eq_node)
+
+    # print(Fqjacob)
+    # print(New_rap)
         
 
 

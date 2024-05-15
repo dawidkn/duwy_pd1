@@ -3,53 +3,56 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def con_def(connect):
-    c_rot = []
     c_mov = []
 
     for row in connect:
-        if row[0] == "obrotowa":
-            del row[0]
-            c_rot.append(row)
-
-        elif row[0] == "postepowa":
-            del row[0]
+        if row[0] == "postepowa":
             c_mov.append(row)
-        else:
-            print("blad danych")
-    return c_mov, c_rot
 
-def moving_line_connectors(connect, step_time, time):
-    moving_connect, rotation_connect = con_def(connect)
+    if len(c_mov) == 0:
+        return 0
+    else:
+        return len(c_mov)
 
-    omega = [10,10] #w stopniach
-    fi = [30,80] #w stponiach
-    l = [0.3,0.6]
-    a = [0.25,0.35]
-    y = []
-    x = np.arange(0, time, step_time)
-
-    for i in range(len(moving_connect)):
-
-        ome_rand = np.random.uniform(5,45)      #dla testu!!!!!!!!!!!!!!!!!
-        fi_rand = np.random.uniform(12,85)      #dla testu!!!!!!!!!!!!!!!!!!!1
-        l_rand = np.random.uniform(0.2,0.9)     #dla testu!!!!!!!!!!!!!!!!!
-        a_rand = np.random.uniform(0.15,0.7)    #dla testu!!!!!!!!!!!!!!!
-        # index = i % len(a) #to pozwala mi korzystać tylko z dwóch indeksów w tablicach zmiennych jak postępowych mam więcej
-        # yo = l[index]+a[index]*np.sin(omega[index]*x+fi[index]) # to samo co wyżej
-        yo = l_rand+a_rand*np.sin(ome_rand*x+fi_rand)     # dla testu!!!!!!!!!!!!!!!!!!
-        y.append(yo)
-        plt.plot(x, yo)
+def moving_contact_chart(connect, time, step_time):
+    move_l = con_def(connect)
+    data, x = input_moving_cof(connect, time, step_time)
+    yt = []
+    for i in range(move_l):
+        y = []
+        for j in range(len(x)):
+            index = i % len(data[0]) #to pozwala mi korzystać tylko z dwóch indeksów w tablicach zmiennych jak postępowych mam więcej
+            yo = data[2][index]+data[3][index]*np.sin(data[0][index]*x[j]+[1][index]) # to samo co wyżej
+            y.append(yo)
+        yt.append(y)
+        plt.plot(x, y)
         
     # omega_rad = np.radians(omega)
     # fi_rad = np.radians(fi)
-
-
-    plt.title('przemieszczenie tloka')
+    plt.title('wykres wymuszen')
     plt.xlabel('time')
     plt.ylabel('[mm]')
     plt.legend()
     # plt.show()
-    return x, y, moving_connect, rotation_connect
+    return yt, x
+
+def input_moving_cof(connect, time, step_time):
+    omega = [10,10] #w stopniach
+    fi = [30,80] #w stponiach
+    l = [0.3,0.6]
+    a = [0.25,0.35]
+    
+    data = [omega, fi, l, a]
+    x = []
+    xo = 0
+    while xo <= time:
+        x.append(xo)
+        xo += step_time
+    return data, x
+
+# def moving_line_connectors(connect, step_time, time):
+
+#     return x, y, moving_connect, rotation_connect
 
 
 
