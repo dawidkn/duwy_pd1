@@ -22,7 +22,7 @@ def moving_contact_chart(connect, time, step_time):
         y = []
         for j in range(len(x)):
             index = i % len(data[0]) #to pozwala mi korzystać tylko z dwóch indeksów w tablicach zmiennych jak postępowych mam więcej
-            yo = data[2][index]+data[3][index]*np.sin(data[0][index]*x[j]+[1][index]) # to samo co wyżej
+            yo = data[2][index]+data[3][index]*np.sin(data[0][index]*x[j]+data[1][index]) # to samo co wyżej
             y.append(yo)
         yt.append(y)
         plt.plot(x, y)
