@@ -1,5 +1,5 @@
 typ_pary;czlon1;czlon2;wsp_X;wsp_Y
 obrotowa;G;1;0;0
-postepowa;1;2;0;1
+obrotowa;1;2;0;1
 obrotowa;3;2;2;4
 postepowa;G;3;2;4

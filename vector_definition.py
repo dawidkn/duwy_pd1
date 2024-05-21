@@ -1,5 +1,6 @@
 import math
 import numpy as np
+from connections import equation
 
 def S_vector(Q, Connect, tracking, ismoving):
     S=[]
@@ -39,11 +40,12 @@ def absolute_vector(body,connection, step_time,time): #definiuje wektor abosolut
     tracking = []
     ismoving = []
     i = 0
-
+    isground = []
     for row in connection:
         
         if row[1] == "G":
             row[1] = 0
+            isground.append(i)
         tracking.append([int(row[1]),int(row[2])])
         if row[0] =="postepowa":
             ismoving.append(i)
@@ -54,15 +56,17 @@ def absolute_vector(body,connection, step_time,time): #definiuje wektor abosolut
         i +=1
 
     S = S_vector(Q, connection, tracking, ismoving) #definicja wektora S
-    equation = node_eq(S, Q, Rot, ismoving, tracking) #definicja wektora FI d
+    eqN, extension, alleqN = node_eq(S, Q, Rot, ismoving, tracking) #definicja wektora FI d
 
 
-    return S, Q, Rot
+    return S, Q, Rot, eqN, extension, tracking, ismoving, isground, alleqN
 
 
 def node_eq(S, Q, Rot, ismoving, tracking):
     j = 0
     eqN = []
+    extension = []
+    alleqN = []
     Qrotate = [np.array([sublist[1], sublist[0]]).reshape(2, 1) for sublist in Q] #przerobienie listy list Q na liste macierzy Q i zrotowanie
     for i in range(len(S)//2):
         if i in ismoving: #sprawdza czy jest postepowa 
@@ -70,39 +74,47 @@ def node_eq(S, Q, Rot, ismoving, tracking):
                 Qr = Qrotate[tracking[i][1]-1]
                 U, V = perpendicular(S[j], S[j+1]) # U - rownolegly V - prostopadly
                 VRj = np.dot(Rot[tracking[i][1]-1], V) #mnozenie macierzy wektora prostopadlego i macierzy rotacji
-                eqN.append(0)
-                eqo = np.dot(V.T,(np.array([[0],[0]]) - Qr - np.dot(Rot[tracking[i][1]-1],S[j+1])))
+                URj = np.dot(Rot[tracking[i][1]-1], U) #mnozenie macierzy wektora prostopadlego i macierzy rotacji
+                eqo = np.dot(VRj.T,(np.array([[0],[0]]) - Qr - np.dot(Rot[tracking[i][1]-1],S[j+1])))
+ 
+                ext = (np.dot(URj.T,(np.array([[0],[0]]) - Qr - np.dot(Rot[tracking[i][1]-1],S[j+1]))) - equation(0,0))
+                extension.append(ext)
                 eqN.append(eqo)
-                # print("VRj.T")
-                # print(VRj.T)
-                # print("tracinkh")
-                # print(np.array([[0],[0]]))
-                # print("Qr")
-                # print(Qr)
-                # print("rot")
-                # print(Rot[tracking[i][1]-1])
-                # print("S[j+1]")
-                # print(S[j+1])
+                alleqN.append([eqo, 0, Rot[tracking[i][1]-1], 0, S[j+1]])
+
+
+
+
             else:
                 U, V = perpendicular(S[j], S[j+1]) # U - rownolegly V - prostopadly
-                VRj = np.dot(Rot[tracking[i][1]-1], V) #mnozenie macierzy wektora prostopadlego i macierzy rotacji
+                VRj = np.dot(Rot[tracking[i][0]-1], V) #mnozenie macierzy wektora prostopadlego i macierzy rotacji
+                URj = np.dot(Rot[tracking[i][0]-1], U)
                 Qr1 = Qrotate[tracking[i][0]-1]
                 Qr2 = Qrotate[tracking[i][1]-1]
-                eqo = np.dot(V.T, ((Qr1 + np.dot(Rot[tracking[i][0]-1],S[j])) - (Qr2 + np.dot(Rot[tracking[i][1]-1],S[j+1]))))
+                eqo = np.dot(VRj.T, (Qr1 - Qr2 - np.dot(Rot[tracking[i][1]-1],S[j+1])))
+                
+                ext = np.dot(URj.T,(Qr1 + np.dot(Rot[tracking[i][0]-1],S[j])) - (Qr2 + np.dot(Rot[tracking[i][1]-1],S[j+1]))) - equation(0,1)
+                extension.append(ext)
                 eqN.append(eqo)
+                alleqN.append([eqo, Rot[tracking[i][0]-1], Rot[tracking[i][1]-1], S[j], S[j+1]])
+
         else:
             # print("rownanie dla obrotowej")
             if tracking[i][0] == 0:
                 Qr = Qrotate[tracking[i][1]-1]
                 eqo = np.array([[0],[0]])-(Qr + np.dot(Rot[tracking[i][1]-1],S[j+1]))
                 eqN.append(eqo)
+                alleqN.append([eqo, 0, Rot[tracking[i][1]-1], 0, S[j+1]])
+
             else:
                 Qr1 = Qrotate[tracking[i][0]-1]
                 Qr2 = Qrotate[tracking[i][1]-1]
                 eqo = (Qr1 + np.dot(Rot[tracking[i][0]-1],S[j])) - (Qr2 + np.dot(Rot[tracking[i][1]-1],S[j+1]))
                 eqN.append(eqo)
+                alleqN.append([eqo, Rot[tracking[i][0]-1], Rot[tracking[i][1]-1], S[j], S[j+1]])
+
         j +=2
-    print(eqN)
+    return eqN, extension, alleqN
 
 def perpendicular(s1, s2):
     dx = s2[0,0] - s1[0,0]

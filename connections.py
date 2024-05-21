@@ -42,13 +42,24 @@ def input_moving_cof(connect, time, step_time):
     l = [0.3,0.6]
     a = [0.25,0.35]
     
-    data = [omega, fi, l, a]
+    data_eq_move = [omega, fi, l, a]
     x = []
     xo = 0
     while xo <= time:
         x.append(xo)
-        xo += step_time
-    return data, x
+        xo += step_time 
+    return data_eq_move, x
+
+def equation(t, i):
+    omega = [10,10] #w stopniach
+    fi = [30,80] #w stponiach
+    l = [0.3,0.6]
+    a = [0.25,0.35]
+
+    data_eq_move = [omega, fi, l, a]
+    yo = data_eq_move[2][i]+data_eq_move[3][i]*np.sin(data_eq_move[0][i]*t+data_eq_move[1][i]) # to samo co wyżej
+
+    return yo
 
 # def moving_line_connectors(connect, step_time, time):
 
